@@ -1,0 +1,28 @@
+pdmean: pipe decimate mean.  .. how fast can we do this in software?
+
+pdmean DECIM[=1024]  NCHAN[=8] NSPAD[=0]
+
+DECIM: sum this many samples and output one scaled vallue
+NCHAN: number of ADC channels (int16)
+NSPAD: numer of SPAD (instrumentation columns (u32) in the data)
+
+Answer: fast enough! Assume a 1MSPS data stream (eg 2MSPS ADC, NACC=2)
+
+# 1MHz data on the "SPY port"
+
+acq1102_055> nc localhost 53667 | pv >/dev/null 
+93.0MiB 0:00:07 [15.2MiB/s] 
+
+# 1kHz data on the "SPY port"
+acq1102_055> nc localhost 53667 | pdmean 1024 | pv > /dev/null
+^C51KiB 0:00:37 [14.9KiB/s] [  
+
+# 10Hz data after two decimations
+
+acq1102_055> nc localhost 53667 | pdmean 1024 | pdmean 100 | pv > /dev
+/null
+^C86KiB 0:00:59 [ 142 B/s]
+
+atop shows 2 pdfmean processes, 14% and 2% cpu
+
+

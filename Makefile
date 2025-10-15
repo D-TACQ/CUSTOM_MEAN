@@ -10,11 +10,11 @@ clean:
 CFLAGS += -I../../include
 
 bin/pdmean: pdmean.cpp
-	${CC} ${CFLAGS} pdmean.cpp -o bin/pdmean -L../../lib/linux-arm -lpopt
+	${CXX} ${CFLAGS} pdmean.cpp -o bin/pdmean -L../../lib/linux-arm -lpopt
 
 
 pdmean.x86: pdmean.cpp
-	cc pdmean.cpp -o pdmean.x86 -lpopt
+	${CXX} pdmean.cpp -o pdmean.x86 -lpopt
 
 
 	

@@ -75,6 +75,7 @@ int main(int argc, char* argv[])
 		if (nwords == BUFFER_SAMPLES){
 			process(buffer, sum, decim);
 			fwrite(decim, sizeof(ADC), NCHAN, stdout);
+			fflush(stdout);
 		}else{
 			fprintf(stderr, "ERROR fread returns %ld\n", nwords);
 			return -1;

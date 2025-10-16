@@ -23,8 +23,13 @@ namespace G {
 #define DECIM	G::decim
 #define NSPAD	G::nspad
 #define BUFFER_WIDTH   (G::nchan+G::nspad*2)
+#define BUFFL          (BUFFER_WIDTH/2);
 #define BUFFER_SAMPLES (G::decim * BUFFER_WIDTH)
 #define BUFFER_SZ      (BUFFER_SAMPLES*sizeof(ADC))
+
+long extrap(long p1, long p2) {
+	return p1 + (p1-p2);
+}
 
 void process(ADC* buffer, long* sum, ADC* decim)
 {
@@ -47,6 +52,17 @@ void process(ADC* buffer, long* sum, ADC* decim)
 	long* ldecim = (long*)(decim+NCHAN);
 
 	for (int ispad = 0; ispad < NSPAD; ++ispad){
+		if (ispad == NSPAD-2 &&
+		    lbp[ispad]   == 0xc0de0000 &&
+		    lbp[ispad+1] == 0xc1de0000    ){
+			long* lbp1 = lbp-BUFFL;
+			long* lbp2 = lbp1-BUFFL;
+			ldecim[ispad] = extrap(lbp1[ispad], lbp2[ispad]);
+			ispad++;
+			ldecim[ispad] = extrap(lbp1[ispad], lbp2[ispad]);
+			break;
+		}
+
 		ldecim[ispad] = lbp[ispad];
 	}
 }

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+echo ++ custom_mean.init
+
+source /mnt/local/sysconfig/acq400.sh
+
+CM_NCHAN=${CM_NCHAN:-8}
+CM_NSPAD=${CM_NSPAD:-2}
+CM_DECIM1=${CM_DECIM1:-1024}
+CM_DECIM2=${CM_DECIM2:-64}
+
+# pdmean [decim [nchan [nspad]]]
+cat - >>/etc/inetd.custom_mean.conf <<EOF
+53668 stream tcp nowait root pdmean_spy pdmean_spy $CM_DECIM1 $CM_NCHAN $CM_NSPAD
+53669 stream tcp nowait root pdmean_spy pdmean_spy $CM_DECIM1,$CM_DECIM2 $CM_NCHAN $CM_NSPAD
+EOF
+
+inetd /etc/inetd.custom_mean.conf
+
+

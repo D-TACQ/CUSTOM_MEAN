@@ -1,0 +1,9 @@
+#!/bin/sh
+cmd=acq400_stream_spy
+for decim in $(echo $1 | tr , \ ); do
+        cmd=$cmd" | pdmean $decim $2 $3"
+done
+
+/bin/logger -t pdmean_spy cmd $cmd
+exec $cmd
+

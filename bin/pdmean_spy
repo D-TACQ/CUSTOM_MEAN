@@ -1,9 +1,15 @@
 #!/bin/sh
+# runs acq400_spy through a pdmean divider chain specified as
+# pdmean_spy pdmean_spy 1024 8 2
+# pdmean_spy pdmean_spy 1024,64 8 2
+# cmd is built up as a var, we then have to eval the var. just executing $cmd fails at the pipe
 cmd=acq400_stream_spy
 for decim in $(echo $1 | tr , \ ); do
-        cmd=$cmd" | pdmean $decim $2 $3"
+        cmd="$cmd | pdmean $decim $2 $3"
 done
 
-/usr/bin/logger -t pdmean_spy cmd $cmd
-exec $cmd
+echo "$cmd" > /tmp/pdmean_spy.txt
+/usr/bin/logger -t pdmean_spy cmd "$cmd"
+eval "$cmd"
+
 

@@ -9,6 +9,8 @@ CM_NSPAD=${CM_NSPAD:-2}
 CM_DECIM1=${CM_DECIM1:-1024}
 CM_DECIM2=${CM_DECIM2:-64}
 
+mkemlog /var/log/pdmean.log
+
 # pdmean [decim [nchan [nspad]]]
 cat - >>/etc/inetd.custom_mean.conf <<EOF
 53668 stream tcp nowait root pdmean_spy pdmean_spy $CM_DECIM1 $CM_NCHAN $CM_NSPAD
